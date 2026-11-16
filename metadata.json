@@ -1,0 +1,6 @@
+{
+  "name": "Toko Kelontong Seulanga",
+  "description": "Website profil UMKM Toko Kelontong Seulanga di Lamnyong, Banda Aceh — katalog sembako, gas LPG, air galon, layanan antar gratis, dan pemesanan via WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
