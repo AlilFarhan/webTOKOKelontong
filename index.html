@@ -107,115 +107,275 @@
 
       .container {
         width: 100%;
-        max-width: 1200px;
+        max-width: 1120px;
         margin-left: auto;
         margin-right: auto;
         padding-left: 24px;
         padding-right: 24px;
       }
 
-      /* 1. Sticky Header & Navigation */
-      .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        background-color: rgba(250, 250, 249, 0.94);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--border);
+      /* 1. Sidebar & Hidebar Navigation */
+      .app-shell {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        transition: margin-left 220ms var(--ease-out);
       }
 
-      .header-inner {
+      .app-shell > main {
+        flex: 1 0 auto;
+      }
+
+      .site-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 60;
+        width: 268px;
+        background-color: var(--surface);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px 16px;
+        box-shadow: 4px 0 24px rgba(28, 25, 23, 0.06);
+        transform: translateX(-100%);
+        transition: transform 220ms var(--ease-out);
+      }
+
+      body.sidebar-mobile-open .site-sidebar {
+        transform: translateX(0);
+      }
+
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 55;
+        background-color: rgba(28, 25, 23, 0.42);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms var(--ease-out);
+      }
+
+      body.sidebar-mobile-open .sidebar-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .sidebar-top {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-height: 0;
+      }
+
+      .sidebar-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 32px;
-        height: 68px;
+        gap: 10px;
+        padding: 2px 4px 14px;
+        border-bottom: 1px solid var(--border);
       }
 
       .brand-wordmark {
-        font-size: 1.0625rem;
+        font-size: 1rem;
         font-weight: 800;
         letter-spacing: -0.02em;
         color: var(--emerald);
-        white-space: nowrap;
-        flex-shrink: 0;
+        line-height: 1.25;
       }
 
-      .nav-desktop {
-        display: none;
+      .sidebar-hide-btn {
+        display: inline-flex;
         align-items: center;
-        gap: 28px;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        flex-shrink: 0;
+        background-color: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--ink-secondary);
+        transition: background-color 160ms var(--ease-out), border-color 160ms var(--ease-out),
+          color 160ms var(--ease-out);
       }
 
-      .nav-link {
-        position: relative;
+      .sidebar-hide-btn:hover {
+        background-color: var(--emerald-soft);
+        border-color: var(--emerald);
+        color: var(--emerald);
+      }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 44px;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
         font-size: 0.9375rem;
         font-weight: 600;
         color: var(--ink-secondary);
         white-space: nowrap;
+        transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out);
+      }
+
+      .sidebar-link svg {
         flex-shrink: 0;
-        padding: 6px 0;
+        color: var(--ink-muted);
         transition: color 160ms var(--ease-out);
       }
 
-      .nav-link::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 2px;
-        background-color: var(--amber);
-        transform: scaleX(0);
-        transform-origin: left center;
-        transition: transform 180ms var(--ease-out);
-      }
-
-      .nav-link:hover,
-      .nav-link:focus-visible {
+      .sidebar-link:hover,
+      .sidebar-link:focus-visible {
+        background-color: var(--emerald-soft);
         color: var(--emerald);
       }
 
-      .nav-link:hover::after,
-      .nav-link:focus-visible::after {
-        transform: scaleX(1);
+      .sidebar-link:hover svg,
+      .sidebar-link:focus-visible svg {
+        color: var(--emerald);
       }
 
-      .header-actions {
+      .sidebar-link.is-active {
+        background-color: var(--emerald-soft);
+        color: var(--emerald);
+        font-weight: 700;
+      }
+
+      .sidebar-link.is-active svg {
+        color: var(--emerald);
+      }
+
+      .sidebar-footer {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         gap: 12px;
-        flex-shrink: 0;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
       }
 
-      .header-cta {
-        display: none;
+      .sidebar-hours {
+        padding: 12px;
+        background-color: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+      }
+
+      .sidebar-hours-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+
+      .sidebar-hours-value {
+        display: block;
+        margin-top: 2px;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .sidebar-cta {
+        display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
-        padding: 10px 18px;
+        width: 100%;
+        min-height: 44px;
+        padding: 11px 16px;
         background-color: var(--emerald);
         color: #ffffff;
         font-size: 0.875rem;
         font-weight: 700;
         border-radius: var(--radius-sm);
         white-space: nowrap;
-        flex-shrink: 0;
         transition: background-color 160ms var(--ease-out), transform 160ms var(--ease-out);
       }
 
-      .header-cta:hover {
+      .sidebar-cta:hover {
         background-color: var(--emerald-dark);
         transform: translateY(-1px);
+      }
+
+      /* Floating Reopen Hidebar Trigger (Desktop when hidden) */
+      .sidebar-show-btn {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 45;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 8px 14px;
+        background-color: var(--surface);
+        color: var(--ink);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-size: 0.875rem;
+        font-weight: 700;
+        white-space: nowrap;
+        box-shadow: var(--shadow-card);
+        transition: background-color 160ms var(--ease-out), border-color 160ms var(--ease-out),
+          color 160ms var(--ease-out), transform 160ms var(--ease-out);
+      }
+
+      .sidebar-show-btn:hover {
+        background-color: var(--emerald-soft);
+        border-color: var(--emerald);
+        color: var(--emerald);
+        transform: translateY(-1px);
+      }
+
+      /* Compact Mobile Topbar (< 960px) */
+      .mobile-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 45;
+        background-color: rgba(250, 250, 249, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .mobile-topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 58px;
+        padding: 0 16px;
+      }
+
+      .mobile-topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
       }
 
       .menu-toggle {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 44px;
-        height: 44px;
+        width: 42px;
+        height: 42px;
         padding: 0;
+        flex-shrink: 0;
         background-color: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius-sm);
@@ -229,71 +389,51 @@
         color: var(--emerald);
       }
 
-      .mobile-drawer {
-        display: none;
-        border-top: 1px solid var(--border);
-        background-color: var(--surface);
-        padding: 16px 24px 24px;
-      }
-
-      .mobile-drawer.is-open {
-        display: block;
-      }
-
-      .mobile-nav-list {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .mobile-nav-link {
-        display: flex;
-        align-items: center;
-        min-height: 44px;
-        padding: 10px 12px;
-        border-radius: var(--radius-sm);
+      .mobile-brand {
         font-size: 0.9375rem;
-        font-weight: 600;
-        color: var(--ink-secondary);
-        transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
-      }
-
-      .mobile-nav-link:hover {
-        background-color: var(--emerald-soft);
+        font-weight: 800;
+        letter-spacing: -0.02em;
         color: var(--emerald);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
-      .mobile-drawer-cta {
+      .mobile-topbar-cta {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        min-height: 46px;
-        margin-top: 14px;
-        padding: 12px 20px;
+        gap: 6px;
+        min-height: 38px;
+        padding: 8px 12px;
         background-color: var(--emerald);
         color: #ffffff;
-        font-size: 0.9375rem;
+        font-size: 0.8125rem;
         font-weight: 700;
         border-radius: var(--radius-sm);
+        white-space: nowrap;
+        flex-shrink: 0;
       }
 
-      @media (min-width: 900px) {
-        .nav-desktop {
-          display: flex;
+      @media (min-width: 960px) {
+        .mobile-topbar,
+        .sidebar-backdrop {
+          display: none;
         }
-        .header-cta {
+        .site-sidebar {
+          transform: translateX(0);
+          box-shadow: none;
+        }
+        .app-shell {
+          margin-left: 268px;
+        }
+        body.sidebar-hidden .site-sidebar {
+          transform: translateX(-100%);
+        }
+        body.sidebar-hidden .app-shell {
+          margin-left: 0;
+        }
+        body.sidebar-hidden .sidebar-show-btn {
           display: inline-flex;
-        }
-        .menu-toggle {
-          display: none;
-        }
-        .mobile-drawer.is-open {
-          display: none;
         }
       }
 
@@ -1127,73 +1267,143 @@
     </style>
   </head>
   <body>
-    <!-- 1. Header & Navigasi (Sticky) -->
-    <header class="site-header">
-      <div class="container header-inner">
-        <a href="#beranda" class="brand-wordmark">Toko Kelontong Seulanga</a>
+    <!-- Backdrop untuk Sidebar di HP -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
 
-        <nav class="nav-desktop" aria-label="Navigasi utama">
-          <a href="#beranda" class="nav-link">Beranda</a>
-          <a href="#tentang-kami" class="nav-link">Tentang Kami</a>
-          <a href="#katalog" class="nav-link">Katalog Produk</a>
-          <a href="#layanan" class="nav-link">Layanan</a>
-          <a href="#lokasi" class="nav-link">Lokasi</a>
-        </nav>
+    <!-- Tombol Tampilkan Sidebar (Hidebar Reopen Trigger di Desktop) -->
+    <button
+      type="button"
+      id="sidebar-show-btn"
+      class="sidebar-show-btn"
+      aria-label="Tampilkan sidebar navigasi"
+      aria-controls="app-sidebar"
+      aria-expanded="false"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <line x1="9" y1="3" x2="9" y2="21" />
+        <polyline points="13 9 16 12 13 15" />
+      </svg>
+      <span>Tampilkan Sidebar</span>
+    </button>
 
-        <div class="header-actions">
-          <a
-            href="https://wa.me/6281269001234?text=Halo%20Toko%20Kelontong%20Seulanga,%20saya%20mau%20tanya%20stok%20barang."
-            target="_blank"
-            rel="noopener noreferrer"
-            class="header-cta"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-            </svg>
-            Chat WhatsApp
-          </a>
-
+    <!-- 1. Sidebar Navigasi & Fitur Hidebar -->
+    <aside id="app-sidebar" class="site-sidebar" aria-label="Sidebar navigasi toko">
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <a href="#beranda" class="brand-wordmark">Toko Kelontong Seulanga</a>
           <button
             type="button"
-            id="mobile-menu-btn"
-            class="menu-toggle"
-            aria-label="Buka menu navigasi"
-            aria-expanded="false"
-            aria-controls="mobile-menu-drawer"
+            id="sidebar-hide-btn"
+            class="sidebar-hide-btn"
+            aria-label="Sembunyikan sidebar"
+            aria-controls="app-sidebar"
+            aria-expanded="true"
+            title="Sembunyikan Sidebar"
           >
-            <svg id="icon-menu-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-            <svg id="icon-menu-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <line x1="9" y1="3" x2="9" y2="21" />
+              <polyline points="15 9 12 12 15 15" />
             </svg>
           </button>
         </div>
+
+        <nav class="sidebar-nav" aria-label="Navigasi utama">
+          <a href="#beranda" class="sidebar-link is-active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            <span>Beranda</span>
+          </a>
+          <a href="#tentang-kami" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span>Tentang Kami</span>
+          </a>
+          <a href="#katalog" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            <span>Katalog Produk</span>
+          </a>
+          <a href="#layanan" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="1" y="3" width="15" height="13" rx="2" />
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+            <span>Layanan</span>
+          </a>
+          <a href="#lokasi" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span>Lokasi</span>
+          </a>
+        </nav>
       </div>
 
-      <nav id="mobile-menu-drawer" class="mobile-drawer" aria-label="Navigasi seluler">
-        <ul class="mobile-nav-list">
-          <li><a href="#beranda" class="mobile-nav-link">Beranda</a></li>
-          <li><a href="#tentang-kami" class="mobile-nav-link">Tentang Kami</a></li>
-          <li><a href="#katalog" class="mobile-nav-link">Katalog Produk</a></li>
-          <li><a href="#layanan" class="mobile-nav-link">Layanan</a></li>
-          <li><a href="#lokasi" class="mobile-nav-link">Lokasi</a></li>
-        </ul>
+      <div class="sidebar-footer">
+        <div class="sidebar-hours">
+          <span class="sidebar-hours-label">Jam Buka Setiap Hari</span>
+          <span class="sidebar-hours-value">07.00 – 22.00 WIB</span>
+        </div>
         <a
           href="https://wa.me/6281269001234?text=Halo%20Toko%20Kelontong%20Seulanga,%20saya%20mau%20tanya%20stok%20barang."
           target="_blank"
           rel="noopener noreferrer"
-          class="mobile-drawer-cta"
+          class="sidebar-cta"
         >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+          </svg>
           Pesan via WhatsApp
         </a>
-      </nav>
-    </header>
+      </div>
+    </aside>
 
-    <main>
+    <div class="app-shell">
+      <!-- Bar Atas Ringkas Khusus Layar Mobile -->
+      <header class="mobile-topbar">
+        <div class="mobile-topbar-inner">
+          <div class="mobile-topbar-left">
+            <button
+              type="button"
+              id="mobile-menu-btn"
+              class="menu-toggle"
+              aria-label="Buka sidebar navigasi"
+              aria-expanded="false"
+              aria-controls="app-sidebar"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+            <a href="#beranda" class="mobile-brand">Toko Kelontong Seulanga</a>
+          </div>
+          <a
+            href="https://wa.me/6281269001234?text=Halo%20Toko%20Kelontong%20Seulanga,%20saya%20mau%20tanya%20stok%20barang."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mobile-topbar-cta"
+          >
+            WhatsApp
+          </a>
+        </div>
+      </header>
+
+      <main>
       <!-- 2. Hero Section -->
       <section id="beranda" class="hero-section">
         <div class="container">
@@ -1773,42 +1983,117 @@
         </div>
       </div>
     </footer>
+    </div>
 
     <script>
       (function () {
-        var menuBtn = document.getElementById('mobile-menu-btn');
-        var mobileDrawer = document.getElementById('mobile-menu-drawer');
-        var iconOpen = document.getElementById('icon-menu-open');
-        var iconClose = document.getElementById('icon-menu-close');
+        var body = document.body;
+        var sidebar = document.getElementById('app-sidebar');
+        var hideBtn = document.getElementById('sidebar-hide-btn');
+        var showBtn = document.getElementById('sidebar-show-btn');
+        var mobileBtn = document.getElementById('mobile-menu-btn');
+        var backdrop = document.getElementById('sidebar-backdrop');
 
-        if (!menuBtn || !mobileDrawer) return;
+        if (!sidebar) return;
 
-        function setMenuState(open) {
-          mobileDrawer.classList.toggle('is-open', open);
-          menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-          menuBtn.setAttribute('aria-label', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
-          if (iconOpen && iconClose) {
-            iconOpen.style.display = open ? 'none' : 'block';
-            iconClose.style.display = open ? 'block' : 'none';
+        function isDesktop() {
+          return window.innerWidth >= 960;
+        }
+
+        function setDesktopHidden(hidden) {
+          body.classList.toggle('sidebar-hidden', hidden);
+          if (hideBtn) {
+            hideBtn.setAttribute('aria-expanded', hidden ? 'false' : 'true');
+          }
+          if (showBtn) {
+            showBtn.setAttribute('aria-expanded', hidden ? 'false' : 'true');
           }
         }
 
-        menuBtn.addEventListener('click', function () {
-          var isCurrentlyOpen = mobileDrawer.classList.contains('is-open');
-          setMenuState(!isCurrentlyOpen);
-        });
+        function setMobileOpen(open) {
+          body.classList.toggle('sidebar-mobile-open', open);
+          if (mobileBtn) {
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            mobileBtn.setAttribute('aria-label', open ? 'Tutup sidebar navigasi' : 'Buka sidebar navigasi');
+          }
+        }
 
-        var drawerLinks = mobileDrawer.querySelectorAll('a');
-        for (var i = 0; i < drawerLinks.length; i++) {
-          drawerLinks[i].addEventListener('click', function () {
-            setMenuState(false);
+        if (hideBtn) {
+          hideBtn.addEventListener('click', function () {
+            if (isDesktop()) {
+              setDesktopHidden(true);
+              if (showBtn) showBtn.focus();
+            } else {
+              setMobileOpen(false);
+              if (mobileBtn) mobileBtn.focus();
+            }
           });
         }
 
+        if (showBtn) {
+          showBtn.addEventListener('click', function () {
+            setDesktopHidden(false);
+            if (hideBtn) hideBtn.focus();
+          });
+        }
+
+        if (mobileBtn) {
+          mobileBtn.addEventListener('click', function () {
+            var isOpen = body.classList.contains('sidebar-mobile-open');
+            setMobileOpen(!isOpen);
+          });
+        }
+
+        if (backdrop) {
+          backdrop.addEventListener('click', function () {
+            setMobileOpen(false);
+          });
+        }
+
+        var sidebarLinks = sidebar.querySelectorAll('.sidebar-link');
+        function setActiveLink(hash) {
+          for (var j = 0; j < sidebarLinks.length; j++) {
+            var linkHash = sidebarLinks[j].getAttribute('href');
+            sidebarLinks[j].classList.toggle('is-active', linkHash === hash);
+          }
+        }
+
+        for (var i = 0; i < sidebarLinks.length; i++) {
+          sidebarLinks[i].addEventListener('click', function () {
+            setActiveLink(this.getAttribute('href'));
+            if (!isDesktop()) {
+              setMobileOpen(false);
+            }
+          });
+        }
+
+        var sections = ['beranda', 'tentang-kami', 'katalog', 'layanan', 'lokasi'];
+        window.addEventListener(
+          'scroll',
+          function () {
+            var scrollPos = window.scrollY + 140;
+            var currentHash = '#beranda';
+            for (var k = 0; k < sections.length; k++) {
+              var el = document.getElementById(sections[k]);
+              if (el && el.offsetTop <= scrollPos) {
+                currentHash = '#' + sections[k];
+              }
+            }
+            setActiveLink(currentHash);
+          },
+          { passive: true }
+        );
+
         document.addEventListener('keydown', function (event) {
-          if (event.key === 'Escape' && mobileDrawer.classList.contains('is-open')) {
-            setMenuState(false);
-            menuBtn.focus();
+          if (event.key === 'Escape' && !isDesktop() && body.classList.contains('sidebar-mobile-open')) {
+            setMobileOpen(false);
+            if (mobileBtn) mobileBtn.focus();
+          }
+        });
+
+        window.addEventListener('resize', function () {
+          if (isDesktop() && body.classList.contains('sidebar-mobile-open')) {
+            setMobileOpen(false);
           }
         });
       })();
