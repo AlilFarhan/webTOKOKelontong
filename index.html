@@ -73,6 +73,11 @@
         margin: 0;
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         background-color: var(--bg);
+        background-image:
+          radial-gradient(circle at 12% 18%, rgba(4, 120, 87, 0.045) 0%, transparent 42%),
+          radial-gradient(circle at 88% 58%, rgba(245, 158, 11, 0.05) 0%, transparent 44%),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%23047857' stroke-width='1.35' stroke-linecap='round' stroke-linejoin='round' opacity='0.065'%3E%3C!-- Keranjang belanja --%3E%3Cpath d='M20 28h28l-3 15H23l-3-15z'/%3E%3Cpath d='M26 28l5-8M42 28l-5-8M29 33v6M34 33v6M39 33v6'/%3E%3C!-- Botol minyak / minuman --%3E%3Cpath d='M110 18h8v5l4 5v18a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V28l4-5v-5z'/%3E%3Cline x1='108' y1='34' x2='120' y2='34'/%3E%3C!-- Kantong beras / belanja --%3E%3Cpath d='M70 68h22l2 22a2 2 0 0 1-2 2H70a2 2 0 0 1-2-2l2-22z'/%3E%3Cpath d='M75 68a6 6 0 0 1 12 0'/%3E%3C!-- Cangkir kopi --%3E%3Cpath d='M22 108h18v10a9 9 0 0 1-18 0v-10z'/%3E%3Cpath d='M40 111h4a3 3 0 0 1 0 6h-4'/%3E%3Cpath d='M27 101c0-2 2-3 2-5M34 101c0-2 2-3 2-5'/%3E%3C!-- Tabung / Galon --%3E%3Crect x='110' y='106' width='20' height='26' rx='5'/%3E%3Cpath d='M116 106v-4h8v4M114 118h12'/%3E%3C!-- Daun seulanga --%3E%3Cpath d='M72 22c6-4 13-2 15 5-7 2-13 0-15-5z' stroke='%23b45309'/%3E%3Cpath d='M70 132c6-4 13-2 15 5-7 2-13 0-15-5z' stroke='%23b45309'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: auto, auto, 160px 160px;
         color: var(--ink);
         font-size: 16px;
         line-height: 1.6;
@@ -294,13 +299,58 @@
 
       /* 2. Hero Section */
       .hero-section {
-        padding: 40px 0 56px;
+        position: relative;
+        overflow: hidden;
+        padding: 46px 0 56px;
         border-bottom: 1px solid var(--border);
+        background-color: var(--bg);
+      }
+
+      .hero-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(
+            102deg,
+            rgba(250, 250, 249, 0.96) 0%,
+            rgba(250, 250, 249, 0.92) 48%,
+            rgba(236, 253, 245, 0.85) 100%
+          ),
+          url('/src/assets/images/hero_toko_seulanga_1794802417171.jpg');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.95;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .hero-section::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--emerald) 0 36px,
+          #fef3c7 36px 54px,
+          var(--amber) 54px 72px,
+          #fef3c7 72px 90px
+        );
+        opacity: 0.9;
+        z-index: 1;
+      }
+
+      .hero-section > .container {
+        position: relative;
+        z-index: 2;
       }
 
       @media (min-width: 960px) {
         .hero-section {
-          padding: 64px 0 72px;
+          padding: 70px 0 72px;
         }
       }
 
@@ -460,8 +510,13 @@
         grid-template-columns: 1fr;
         gap: 16px;
         margin-top: 40px;
-        padding-top: 28px;
-        border-top: 1px solid var(--border);
+        padding: 20px 24px;
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-card);
       }
 
       @media (min-width: 640px) {
@@ -502,7 +557,7 @@
       }
 
       .section-alt {
-        background-color: var(--surface);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 250, 249, 0.92) 100%);
         border-top: 1px solid var(--border);
         border-bottom: 1px solid var(--border);
       }
