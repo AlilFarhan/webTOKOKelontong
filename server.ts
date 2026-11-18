@@ -18,9 +18,21 @@ async function startServer() {
   });
 
   app.post('/api/n8n-chat', async (req: Request, res: Response) => {
-    const body = (req.body ?? {}) as N8nChatRequestBody;
-    const result = await forwardToN8nWebhook(body);
-    res.status(result.ok ? 200 : result.status).json(result);
+    try {
+      const body = (req.body ?? {}) as N8nChatRequestBody;
+      const result = await forwardToN8nWebhook(body);
+      res.status(result.ok ? 200 : result.status).json(result);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Server error';
+      res.status(502).json({
+        ok: false,
+        status: 502,
+        reply: '',
+        raw: { message },
+        errorMessage:
+          'Gagal terhubung ke Asisten Toko. Silakan coba lagi atau hubungi WhatsApp 0812-6900-1234.',
+      });
+    }
   });
 
   if (process.env.NODE_ENV !== 'production') {

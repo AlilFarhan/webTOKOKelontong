@@ -2759,27 +2759,37 @@
               Accept: 'application/json'
             },
             body: JSON.stringify(payload)
-          }).then(function (response) {
-            return response.text().then(function (rawBody) {
-              var parsed = parseRawJsonOrText(rawBody);
-              if (parsed && typeof parsed === 'object' && 'ok' in parsed) {
-                if (parsed.ok) {
-                  return parsed.reply || extractReply(parsed.raw) || 'Pesan Anda sudah diterima oleh Asisten Toko Seulanga.';
+          })
+            .then(function (response) {
+              return response.text().then(function (rawBody) {
+                var parsed = parseRawJsonOrText(rawBody);
+                if (parsed && typeof parsed === 'object' && 'ok' in parsed) {
+                  if (parsed.ok) {
+                    return parsed.reply || extractReply(parsed.raw) || 'Pesan Anda sudah diterima oleh Asisten Toko Seulanga.';
+                  }
+                  if (parsed.status >= 500) {
+                    return postDirectProduction(payload);
+                  }
+                  throw new Error(
+                    parsed.errorMessage ||
+                      'Maaf, Asisten Toko sedang tidak tersedia sementara. Silakan coba lagi atau hubungi WhatsApp 0812-6900-1234.'
+                  );
                 }
-                throw new Error(
-                  parsed.errorMessage ||
-                    'Maaf, Asisten Toko sedang tidak tersedia sementara. Silakan coba lagi atau hubungi WhatsApp 0812-6900-1234.'
-                );
-              }
-              if (response.status === 404 || response.status === 405) {
+                if (response.status === 404 || response.status === 405 || response.status >= 500) {
+                  return postDirectProduction(payload);
+                }
+                if (!response.ok) {
+                  throw new Error('Gagal memproses permintaan (HTTP ' + response.status + ').');
+                }
+                return extractReply(parsed) || 'Pesan Anda sudah diterima oleh Asisten Toko Seulanga.';
+              });
+            })
+            .catch(function (err) {
+              if (err && err.name === 'TypeError') {
                 return postDirectProduction(payload);
               }
-              if (!response.ok) {
-                throw new Error('Gagal memproses permintaan (HTTP ' + response.status + ').');
-              }
-              return extractReply(parsed) || 'Pesan Anda sudah diterima oleh Asisten Toko Seulanga.';
+              throw err;
             });
-          });
         }
 
         function sendToChat(rawText, skipUserEcho) {
